@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartFarm NFC Access & Control</title>
+    <link rel="stylesheet" href="style.css"> 
+    <script src="script.js" defer></script> 
+</head>
+<body>
+
+    <div id="login-screen" class="active">
+        <h2>SmartFarm NFC System Login</h2>
+        <form id="login-form"> 
+            <div class="input-group">
+                <label for="user-id">ID:</label>
+                <input type="text" id="user-id" required>
+            </div>
+            <div class="input-group">
+                <label for="user-pw">Password:</label>
+                <input type="password" id="user-pw" required>
+            </div>
+            <button type="submit">로그인</button>
+            <p id="login-message" class="error-text"></p>
+        </form>
+    </div>
+
+    <div id="main-dashboard" class="hidden">
+        <header>
+            <h1>SmartFarm NFC Access & Control</h1>
+            <nav>
+                <span id="current-user"></span>
+                <button id="logout-btn">로그아웃</button>
+            </nav>
+        </header>
+
+        <main>
+            <aside id="sidebar">
+                <h3>관리 항목</h3>
+                <ul>
+                    <li data-section="access-log" class="active">1. 작업자 출입 기록</li>
+                    <li data-section="env-data">2. 환경 데이터 확인</li>
+                    <li data-section="facility-status">3. 온실 시설 장비 상태</li>
+                    <li data-section="crop-info">4. 작물 정보 조회</li>
+                    <li data-section="pest-record">5. 병해충/이상 징후 기록</li>
+                    <li data-section="op-record">6. 노동/운영 기록</li>
+                </ul>
+            </aside>
+
+            <section id="content-area">
+                
+                <div id="access-log" class="content-section active">
+                    <h2>1. 작업자 출입 기록 (NFC 태그)</h2>
+                    <form class="data-input-form">
+                        <label>현재 시간:</label><span id="access-current-time"></span><br>
+                        <button type="button" onclick="recordData('access-log', '입장')">입장 기록 (NFC)</button>
+                        <button type="button" onclick="recordData('access-log', '퇴장')">퇴장 기록 (NFC)</button>
+                    </form>
+                    <div class="data-log">
+                        <h3><span class="icon">📄</span> 기록 내역 (출입)</h3>
+                        <table>
+                            <thead><tr><th>날짜/시간</th><th>작업자 ID</th><th>구분</th></tr></thead>
+                            <tbody id="access-log-table"></tbody>
+                        </table>
+                        <button onclick="saveData('access-log')">기록 저장</button>
+                    </div>
+                </div>
+
+                <div id="env-data" class="content-section hidden">
+                    <h2>2. 환경 데이터 확인</h2>
+                    <form class="data-input-form">
+                        <label for="env-temp">온도 (°C):</label> <input type="number" id="env-temp" required><br>
+                        <label for="env-humi">습도 (%):</label> <input type="number" id="env-humi" required><br>
+                        <label for="env-light">조도 (Lux):</label> <input type="number" id="env-light" required><br>
+                        <button type="button" onclick="recordData('env-data')">환경 데이터 기록</button>
+                    </form>
+                    <div class="data-log">
+                        <h3><span class="icon">📊</span> 기록 내역 (환경)</h3>
+                        <table>
+                            <thead><tr><th>날짜/시간</th><th>온도</th><th>습도</th><th>조도</th></tr></thead>
+                            <tbody id="env-data-table"></tbody>
+                        </table>
+                        <button onclick="saveData('env-data')">기록 저장</button>
+                    </div>
+                </div>
+
+                <div id="facility-status" class="content-section hidden">
+                    <h2>3. 온실 시설 장비 상태</h2>
+                    <form class="data-input-form">
+                        <label for="fac-name">장비 이름:</label> <input type="text" id="fac-name" required><br>
+                        <label for="fac-status">상태:</label> 
+                        <select id="fac-status">
+                            <option value="정상">정상</option>
+                            <option value="경고">경고</option>
+                            <option value="오류">오류</option>
+                        </select><br>
+                        <label for="fac-memo">특이 사항:</label> <input type="text" id="fac-memo"><br>
+                        <button type="button" onclick="recordData('facility-status')">점검 기록</button>
+                    </form>
+                    <div class="data-log">
+                        <h3><span class="icon">🛠️</span> 기록 내역 (시설)</h3>
+                        <table>
+                            <thead><tr><th>날짜/시간</th><th>장비 이름</th><th>상태</th><th>특이 사항</th></tr></thead>
+                            <tbody id="facility-status-table"></tbody>
+                        </table>
+                        <button onclick="saveData('facility-status')">기록 저장</button>
+                    </div>
+                </div>
+
+                <div id="crop-info" class="content-section hidden">
+                    <h2>4. 작물 정보 조회</h2>
+                    <form class="data-input-form">
+                        <label for="crop-name">작물 이름:</label> <input type="text" id="crop-name" required><br>
+                        <label for="crop-stage">재배 단계:</label> 
+                        <select id="crop-stage">
+                            <option value="파종">파종</option>
+                            <option value="생장">생장</option>
+                            <option value="수확">수확</option>
+                        </select><br>
+                        <label for="crop-health">건강 상태:</label> <input type="text" id="crop-health" required><br>
+                        <button type="button" onclick="recordData('crop-info')">상태 기록</button>
+                    </form>
+                    <div class="data-log">
+                        <h3><span class="icon">🌱</span> 기록 내역 (작물)</h3>
+                        <table>
+                            <thead><tr><th>날짜/시간</th><th>작물 이름</th><th>재배 단계</th><th>건강 상태</th></tr></thead>
+                            <tbody id="crop-info-table"></tbody>
+                        </table>
+                        <button onclick="saveData('crop-info')">기록 저장</button>
+                    </div>
+                </div>
+
+                <div id="pest-record" class="content-section hidden">
+                    <h2>5. 병해충/이상 징후 기록</h2>
+                    <form class="data-input-form">
+                        <label for="pest-type">징후 유형:</label> <input type="text" id="pest-type" required><br>
+                        <label for="pest-loc">발견 위치:</label> <input type="text" id="pest-loc" required><br>
+                        <label for="pest-severity">심각도:</label>
+                        <select id="pest-severity">
+                            <option value="경미">경미</option>
+                            <option value="보통">보통</option>
+                            <option value="심각">심각</option>
+                        </select><br>
+                        <button type="button" onclick="recordData('pest-record')">징후 기록</button>
+                    </form>
+                    <div class="data-log">
+                        <h3><span class="icon">🐞</span> 기록 내역 (병해충)</h3>
+                        <table>
+                            <thead><tr><th>날짜/시간</th><th>징후 유형</th><th>발견 위치</th><th>심각도</th></tr></thead>
+                            <tbody id="pest-record-table"></tbody>
+                        </table>
+                        <button onclick="saveData('pest-record')">기록 저장</button>
+                    </div>
+                </div>
+
+                <div id="op-record" class="content-section hidden">
+                    <h2>6. 노동/운영 기록</h2>
+                    <form class="data-input-form">
+                        <label for="op-task">작업 종류:</label> <input type="text" id="op-task" required><br>
+                        <label for="op-time">작업 시간 (분):</label> <input type="number" id="op-time" required><br>
+                        <label for="op-worker">작업자 수:</label> <input type="number" id="op-worker" required><br>
+                        <button type="button" onclick="recordData('op-record')">운영 기록</button>
+                    </form>
+                    <div class="data-log">
+                        <h3><span class="icon">🧑‍🌾</span> 기록 내역 (운영)</h3>
+                        <table>
+                            <thead><tr><th>날짜/시간</th><th>작업 종류</th><th>작업 시간 (분)</th><th>작업자 수</th></tr></thead>
+                            <tbody id="op-record-table"></tbody>
+                        </table>
+                        <button onclick="saveData('op-record')">기록 저장</button>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+</body>
+</html>

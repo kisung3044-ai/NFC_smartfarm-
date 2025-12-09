@@ -1,0 +1,150 @@
+/* 전체 레이아웃 초기화 및 기본 폰트 설정 */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7f6; /* 연한 배경 */
+    color: #333;
+}
+
+/* 🔒 로그인 화면 스타일 */
+#login-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #2c3e50; /* 어두운 배경 */
+    color: white;
+}
+
+#login-screen.hidden { display: none; }
+#login-screen.active { display: flex; }
+
+#login-form {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: #333;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+input[type="text"], input[type="password"], select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #2ecc71; /* 녹색 계열 버튼 */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px; /* 버튼 간격 추가 */
+}
+
+button:hover {
+    background-color: #27ae60;
+}
+
+/* 🖥️ 메인 대시보드 레이아웃 */
+#main-dashboard {
+    display: none; /* JS가 로드되기 전에는 숨김 */
+    grid-template-rows: auto 1fr; 
+    height: 100vh;
+}
+
+header {
+    background-color: #34495e; /* 헤더 배경 */
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+main {
+    display: flex;
+    overflow: hidden;
+}
+
+/* 좌측 사이드바 (메뉴) */
+#sidebar {
+    width: 250px;
+    background-color: #ecf0f1; /* 연한 회색 */
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+}
+
+#sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+#sidebar li {
+    padding: 10px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+#sidebar li:hover {
+    background-color: #dce0e4;
+}
+
+#sidebar li.active {
+    background-color: #2ecc71;
+    color: white;
+    font-weight: bold;
+}
+
+/* 우측 콘텐츠 영역 */
+#content-area {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.content-section {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: white;
+    margin-bottom: 20px;
+}
+
+.content-section.hidden { display: none; }
+
+/* 데이터 기록 테이블 스타일 */
+.data-log table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.data-log th, .data-log td {
+    border: 1px solid #eee;
+    padding: 8px;
+    text-align: left;
+}
+
+.data-log th {
+    background-color: #f8f8f8;
+}
+
+.error-text {
+    color: red;
+    margin-top: 10px;
+    font-weight: bold;
+}
