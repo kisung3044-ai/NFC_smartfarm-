@@ -209,3 +209,65 @@ setInterval(() => {
     const timeBox = document.getElementById('access-current-time');
     if (timeBox) timeBox.textContent = new Date().toLocaleString();
 }, 1000);
+// =========================================================
+// [추가] renderAllTables 함수 (기존 함수를 덮어쓰고 삭제 버튼을 추가합니다.)
+// =========================================================
+
+function renderAllTables() {
+    // 기존의 dataStore 변수와 목록을 사용합니다.
+    for (const sectionId in dataStore) {
+        const tableBody = document.getElementById(`${sectionId}-table`);
+        if (!tableBody) continue;
+        
+        tableBody.innerHTML = ''; // 초기화
+
+        const list = dataStore[sectionId]; 
+        
+        for (let i = 0; i < list.length; i++) {
+            const data = list[i];
+            const row = tableBody.insertRow();
+            
+            // 데이터 항목별로 행 내용 채우기 (기존 로직과 동일)
+            if (sectionId === 'access-log') {
+                row.innerHTML = `<td>${data.timestamp}</td><td>${data.userId}</td><td>${data.action}</td>`;
+            } else if (sectionId === 'env-data') {
+                row.innerHTML = `<td>${data.timestamp}</td><td>${data.temp}°C</td><td>${data.humi}%</td><td>${data.light} Lux</td>`;
+            } else if (sectionId === 'facility-status') {
+                row.innerHTML = `<td>${data.timestamp}</td><td>${data.name}</td><td>${data.status}</td><td>${data.memo}</td>`;
+            } else if (sectionId === 'crop-info') {
+                row.innerHTML = `<td>${data.timestamp}</td><td>${data.name}</td><td>${data.stage}</td><td>${data.health}</td>`;
+            } else if (sectionId === 'pest-record') {
+                row.innerHTML = `<td>${data.timestamp}</td><td>${data.type}</td><td>${data.loc}</td><td>${data.severity}</td>`;
+            } else if (sectionId === 'op-record') {
+                row.innerHTML = `<td>${data.timestamp}</td><td>${data.task}</td><td>${data.time}분</td><td>${data.worker}명</td>`;
+            }
+            
+            // ⚠️ [삭제 버튼 추가]: 클릭 시 deleteRecord 함수 호출
+            row.innerHTML += `<td><button onclick="deleteRecord('${sectionId}', ${i})" class="delete-btn">삭제</button></td>`;
+        }
+    }
+}
+// =========================================================
+// [추가] deleteRecord 함수 (실제 삭제 처리 로직)
+// =========================================================
+
+function deleteRecord(sectionId, index) {
+    if (!loggedInUser) {
+        alert("로그인이 필요합니다.");
+        return;
+    }
+
+    // 사용자에게 삭제 확인 받기
+    if (confirm("정말로 이 기록을 삭제하시겠습니까?")) {
+        // 1. dataStore 배열에서 해당 인덱스의 항목을 제거
+        dataStore[sectionId].splice(index, 1);
+
+        // 2. Local Storage에도 변경 사항을 즉시 반영 (영구 삭제)
+        localStorage.setItem(sectionId, JSON.stringify(dataStore[sectionId]));
+
+        // 3. 화면을 다시 그려 변경 사항을 즉시 표시
+        renderAllTables();
+        
+        alert("기록이 삭제되었습니다. (새로고침해도 적용됩니다.)");
+    }
+}
