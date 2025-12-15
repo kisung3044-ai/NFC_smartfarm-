@@ -205,3 +205,66 @@ function updateAccessCurrentTime() {
 }
 setInterval(updateAccessCurrentTime, 1000);
 updateAccessCurrentTime();
+// =========================================================
+// [추가] A: renderAllTables 함수 (기존 함수를 덮어쓰고 삭제 버튼을 추가합니다.)
+// =========================================================
+
+function renderAllTables() {
+    for (const sectionId in dataStore) {
+        const dataList = dataStore[sectionId];
+        const tableBody = document.getElementById(`${sectionId}-table`);
+        if (!tableBody) continue; 
+        
+        // 기존 테이블 내용 비우기
+        tableBody.innerHTML = ''; 
+
+        // 최신 기록이 위로 오도록 역순으로 테이블에 삽입
+        // 이 루프의 인덱스 i를 deleteRecord 함수에 넘겨 삭제할 대상을 지정합니다.
+        for (let i = dataList.length - 1; i >= 0; i--) { 
+            const record = dataList[i];
+            const newRow = tableBody.insertRow(0); // 0번에 삽입 (최신순)
+            
+            // 항목별로 테이블 셀 내용 구성
+            if (sectionId === 'access-log') {
+                newRow.innerHTML = `<td>${record.timestamp}</td><td>${record.userId}</td><td>${record.action}</td>`;
+            } else if (sectionId === 'env-data') {
+                newRow.innerHTML = `<td>${record.timestamp}</td><td>${record.temp}°C</td><td>${record.humi}%</td><td>${record.light} Lux</td>`;
+            } else if (sectionId === 'facility-status') {
+                newRow.innerHTML = `<td>${record.timestamp}</td><td>${record.name}</td><td>${record.status}</td><td>${record.memo}</td>`;
+            } else if (sectionId === 'crop-info') {
+                newRow.innerHTML = `<td>${record.timestamp}</td><td>${record.name}</td><td>${record.stage}</td><td>${record.health}</td>`;
+            } else if (sectionId === 'pest-record') {
+                newRow.innerHTML = `<td>${record.timestamp}</td><td>${record.type}</td><td>${record.loc}</td><td>${record.severity}</td>`;
+            } else if (sectionId === 'op-record') {
+                newRow.innerHTML = `<td>${record.timestamp}</td><td>${record.task}</td><td>${record.time}분</td><td>${record.worker}명</td>`;
+            }
+
+            // ⚠️ [추가된 부분]: 삭제 버튼을 포함하는 셀 추가
+            newRow.innerHTML += `<td><button onclick="deleteRecord('${sectionId}', ${i})" class="delete-btn">삭제</button></td>`;
+        }
+    }
+}
+// =========================================================
+// [추가] B: deleteRecord 함수 (실제 삭제 처리 로직)
+// =========================================================
+
+function deleteRecord(sectionId, index) {
+    if (!loggedInUser) {
+        alert("로그인이 필요합니다.");
+        return;
+    }
+
+    // 사용자에게 삭제 확인 받기
+    if (confirm("정말로 이 기록을 삭제하시겠습니까?")) {
+        // 1. dataStore 배열에서 해당 인덱스의 항목을 제거
+        dataStore[sectionId].splice(index, 1);
+
+        // 2. Local Storage에도 변경 사항을 즉시 반영 (영구 삭제, 키 이름 일치)
+        localStorage.setItem(`smartfarm_data_${sectionId}`, JSON.stringify(dataStore[sectionId]));
+
+        // 3. 화면을 다시 그려 변경 사항을 즉시 표시
+        renderAllTables();
+        
+        alert("기록이 삭제되었습니다. (새로고침해도 적용됩니다.)");
+    }
+}
