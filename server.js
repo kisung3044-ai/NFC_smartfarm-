@@ -172,38 +172,6 @@ function saveData(sectionId) {
     alert("현재 상태가 안전하게 저장되었습니다.");
 }
 
-// 화면에 테이블 그리는 함수
-function renderAllTables() {
-    for (const sectionId in dataStore) {
-        const tableBody = document.getElementById(`${sectionId}-table`);
-        if (!tableBody) continue;
-        
-        tableBody.innerHTML = ''; // 초기화
-
-        // 최신순(역순)으로 보여주려면 .reverse() 사용 가능, 여기선 입력순
-        const list = dataStore[sectionId]; 
-        
-        for (let i = 0; i < list.length; i++) {
-            const data = list[i];
-            const row = tableBody.insertRow();
-            
-            if (sectionId === 'access-log') {
-                row.innerHTML = `<td>${data.timestamp}</td><td>${data.userId}</td><td>${data.action}</td>`;
-            } else if (sectionId === 'env-data') {
-                row.innerHTML = `<td>${data.timestamp}</td><td>${data.temp}°C</td><td>${data.humi}%</td><td>${data.light} Lux</td>`;
-            } else if (sectionId === 'facility-status') {
-                row.innerHTML = `<td>${data.timestamp}</td><td>${data.name}</td><td>${data.status}</td><td>${data.memo}</td>`;
-            } else if (sectionId === 'crop-info') {
-                row.innerHTML = `<td>${data.timestamp}</td><td>${data.name}</td><td>${data.stage}</td><td>${data.health}</td>`;
-            } else if (sectionId === 'pest-record') {
-                row.innerHTML = `<td>${data.timestamp}</td><td>${data.type}</td><td>${data.loc}</td><td>${data.severity}</td>`;
-            } else if (sectionId === 'op-record') {
-                row.innerHTML = `<td>${data.timestamp}</td><td>${data.task}</td><td>${data.time}분</td><td>${data.worker}명</td>`;
-            }
-        }
-    }
-}
-
 // 현재 시간 1초마다 업데이트
 setInterval(() => {
     const timeBox = document.getElementById('access-current-time');
