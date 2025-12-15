@@ -1,10 +1,27 @@
+/* ---------------------------------------------------- */
+/* --- 🚀 SMART FARM DASHBOARD: PROFESSIONAL THEME --- */
+/* ---------------------------------------------------- */
+
+/* 1. 기본 설정 및 폰트 */
+:root {
+    /* 컬러 팔레트 정의 */
+    --primary-color: #2ecc71; /* 녹색 (강조색) */
+    --accent-color: #1abc9c; /* 보조 강조색 */
+    --dark-bg: #2c3e50; /* 어두운 배경 (네이비/다크블루) */
+    --light-bg: #f4f7f6; /* 연한 배경 (배경) */
+    --card-bg: #ffffff; /* 카드 배경 */
+    --text-color: #34495e; /* 기본 텍스트 (다크 네이비) */
+    --light-text: #ecf0f1; /* 밝은 텍스트 */
+    --border-color: #e0e6e9; /* 테두리 색상 */
+}
+
 /* 전체 레이아웃 초기화 및 기본 폰트 설정 */
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* 더 모던한 폰트 우선순위 */
     margin: 0;
     padding: 0;
-    background-color: #f4f7f6; /* 연한 배경 */
-    color: #333;
+    background-color: var(--light-bg); /* 연한 배경 */
+    color: var(--text-color);
 }
 
 /* 🔒 로그인 화면 스타일 */
@@ -14,63 +31,89 @@ body {
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background-color: #2c3e50; /* 어두운 배경 */
-    color: white;
+    background-color: var(--dark-bg); /* 어두운 배경 유지 */
+    color: var(--light-text);
 }
 
 #login-screen.hidden { display: none; }
 #login-screen.active { display: flex; }
 
 #login-form {
-    background: #ffffff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    color: #333;
+    background: var(--card-bg);
+    padding: 40px; /* 패딩 증가 */
+    border-radius: 12px; /* 모서리 더 둥글게 */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* 그림자 강화 */
+    color: var(--text-color);
+    width: 300px;
 }
 
 .input-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px; /* 간격 증가 */
 }
 
 input[type="text"], input[type="password"], select {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px; /* 모서리 둥글게 */
     box-sizing: border-box;
+    transition: border-color 0.3s;
 }
 
+input[type="text"]:focus, input[type="password"]:focus, select:focus {
+    border-color: var(--primary-color); /* 포커스 시 강조색 */
+    outline: none;
+}
+
+/* 일반 버튼 스타일 */
 button {
-    background-color: #2ecc71; /* 녹색 계열 버튼 */
+    background-color: var(--primary-color); /* 녹색 계열 버튼 */
     color: white;
-    padding: 10px 15px;
+    padding: 12px 20px;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px; /* 모서리 둥글게 */
     cursor: pointer;
-    transition: background-color 0.3s;
-    margin-top: 10px; /* 버튼 간격 추가 */
+    transition: background-color 0.3s, transform 0.1s;
+    margin-top: 15px; /* 버튼 간격 추가 */
+    font-weight: bold;
 }
 
 button:hover {
     background-color: #27ae60;
+    transform: translateY(-1px); /* 살짝 떠오르는 효과 */
 }
+
+/* 삭제 버튼 전용 스타일 (작고 빨갛게) */
+.delete-btn {
+    background-color: #e74c3c; /* 빨간색 계열 */
+    padding: 6px 10px;
+    font-size: 0.85em;
+    margin-top: 0;
+}
+
+.delete-btn:hover {
+    background-color: #c0392b;
+    transform: none;
+}
+
 
 /* 🖥️ 메인 대시보드 레이아웃 */
 #main-dashboard {
-    display: none; /* JS가 로드되기 전에는 숨김 */
+    display: none; 
     grid-template-rows: auto 1fr; 
     height: 100vh;
 }
 
 header {
-    background-color: #34495e; /* 헤더 배경 */
-    color: white;
-    padding: 15px 20px;
+    background-color: var(--dark-bg); /* 헤더 배경을 어둡게 */
+    color: var(--light-text);
+    padding: 15px 30px; 
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 1.1em;
 }
 
 main {
@@ -80,10 +123,18 @@ main {
 
 /* 좌측 사이드바 (메뉴) */
 #sidebar {
-    width: 250px;
-    background-color: #ecf0f1; /* 연한 회색 */
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+    width: 280px; /* 너비 약간 확장 */
+    background-color: var(--card-bg); /* 흰색 배경으로 전환 */
+    padding: 20px 0; /* 좌우 패딩 제거 */
+    box-shadow: 4px 0 8px rgba(0, 0, 0, 0.05); /* 그림자 강화 */
+    min-width: 280px;
+}
+
+#sidebar h2 {
+    padding: 0 20px 10px; /* 제목 패딩 */
+    color: var(--primary-color);
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 15px;
 }
 
 #sidebar ul {
@@ -92,59 +143,79 @@ main {
 }
 
 #sidebar li {
-    padding: 10px;
-    margin-bottom: 5px;
+    padding: 12px 25px; /* 패딩 증가 */
+    margin-bottom: 2px; /* 간격 줄임 */
     cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.2s;
+    border-left: 5px solid transparent; /* 비활성 시 투명 테두리 */
+    transition: background-color 0.2s, border-left 0.2s;
 }
 
 #sidebar li:hover {
-    background-color: #dce0e4;
+    background-color: #f0f4f6;
 }
 
 #sidebar li.active {
-    background-color: #2ecc71;
-    color: white;
+    background-color: #e3f4ee; /* 활성화 시 연한 배경 */
+    color: var(--primary-color); 
     font-weight: bold;
+    border-left: 5px solid var(--primary-color); /* 활성화 시 색상 테두리 */
 }
 
 /* 우측 콘텐츠 영역 */
 #content-area {
     flex-grow: 1;
-    padding: 20px;
+    padding: 30px; /* 패딩 증가 */
     overflow-y: auto;
+    background-color: var(--light-bg);
 }
 
+/* 데이터 입력/기록 섹션 (카드 스타일) */
 .content-section {
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: white;
-    margin-bottom: 20px;
+    padding: 30px; /* 패딩 증가 */
+    border: none; /* 테두리 제거 */
+    border-radius: 8px; /* 모서리 둥글게 */
+    background-color: var(--card-bg);
+    margin-bottom: 25px; /* 간격 증가 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* 은은한 그림자 */
 }
-
-.content-section.hidden { display: none; }
 
 /* 데이터 기록 테이블 스타일 */
 .data-log table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 15px;
+    margin-top: 20px;
+    border-radius: 6px;
+    overflow: hidden; /* 모서리 둥글게 처리 */
 }
 
 .data-log th, .data-log td {
-    border: 1px solid #eee;
-    padding: 8px;
+    padding: 12px 15px; /* 패딩 증가 */
     text-align: left;
+    border-bottom: 1px solid var(--border-color); /* 가로선만 유지 */
+    border-right: none;
+    border-left: none;
 }
 
 .data-log th {
-    background-color: #f8f8f8;
+    background-color: var(--dark-bg); /* 헤더를 어둡게 하여 강조 */
+    color: var(--light-text);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid var(--primary-color); /* 강조선 */
+}
+
+/* 테이블 내용 행 스타일링 */
+.data-log tbody tr:nth-child(even) {
+    background-color: #fcfcfc; /* 짝수 행에 연한 배경 (Zebra Striping) */
+}
+
+.data-log tbody tr:hover {
+    background-color: #f0f8ff; /* 마우스 오버 시 연한 하이라이트 */
 }
 
 .error-text {
-    color: red;
+    color: #e74c3c; /* 빨간색 계열 변경 */
     margin-top: 10px;
     font-weight: bold;
 }
